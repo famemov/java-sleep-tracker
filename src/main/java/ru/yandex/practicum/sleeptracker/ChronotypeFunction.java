@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.function.Function;
 
 public class ChronotypeFunction implements Function<List<SleepingSession>, SleepAnalysisResult<?>> {
+    private static final LocalTime lateTimeToSleep = LocalTime.of(23, 0);
+    private static final LocalTime earlyTimeToSleep = LocalTime.of(22, 0);
+    private static final LocalTime lateTimeToWakeUp = LocalTime.of(9, 0);
+    private static final LocalTime earlyTimeToWakeUp = LocalTime.of(7, 0);
+    //вынес границы в константы
+
     @Override
     public SleepAnalysisResult<Chronotype> apply(List<SleepingSession> sessions) {
         List<LocalDate> nights = NightAnalysis.dates(sessions);
@@ -55,15 +61,15 @@ public class ChronotypeFunction implements Function<List<SleepingSession>, Sleep
         LocalTime wakeUpTime = end.toLocalTime();
 
         // засыпание после полуночи (например, в 01:00) тоже считается поздним
-        boolean lateBedtime = bedtime.isAfter(LocalTime.of(23, 0))
+        boolean lateBedtime = bedtime.isAfter(lateTimeToSleep)
                 || bedtime.isBefore(LocalTime.NOON);
         boolean earlyBedtime = !bedtime.isBefore(LocalTime.NOON)
-                && bedtime.isBefore(LocalTime.of(22, 0));
+                && bedtime.isBefore(earlyTimeToSleep);
 
-        if (lateBedtime && wakeUpTime.isAfter(LocalTime.of(9, 0))) {
+        if (lateBedtime && wakeUpTime.isAfter(lateTimeToWakeUp)) {
             return Chronotype.OWL;
         }
-        if (earlyBedtime && wakeUpTime.isBefore(LocalTime.of(7, 0))) {
+        if (earlyBedtime && wakeUpTime.isBefore(earlyTimeToWakeUp)) {
             return Chronotype.LARK;
         }
         return Chronotype.PIGEON;

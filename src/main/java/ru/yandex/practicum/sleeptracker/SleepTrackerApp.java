@@ -1,10 +1,13 @@
 package ru.yandex.practicum.sleeptracker;
-
+//нейронками я пользуюсь для генерации похожего кода или примера метода который я сам не могу придумать как реализовать,
+//а так беру все методы из obsidian брейна своего. а еще скелет приложеня когда тз прочитал могу сгенерировать
+//основываясь что понял и какие классы в голове с методами возникли(не кидаю тз а сам пытаюсь понять ну и в подсказки
+// заглядываю). также иногда коментарии делаю через копилот и тесты так комментирую чтобы не путаться.
+// я всетаки не весь проект закидываю и говорю нейронке сделать его :p
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Scanner;
 import java.util.function.Function;
 
 public class SleepTrackerApp {
@@ -19,29 +22,20 @@ public class SleepTrackerApp {
     );
 
     public static void main(String[] args) throws IOException {
-        if (args.length > 1) {
-            System.out.println("Передайте один путь к файлу с логом сна");
-            return;
-        } // когда я проверял проект по соответсвию тз то там было сказано что нужно передавать путь к файлу с
-        // логом сна в качестве аргумента командной строки но не очень понял как и сделал две реализации через нейронку
-        String filePath;
-        if (args.length == 1) {
-            filePath = args[0];
-        } else {
-            System.out.println("Введите путь к файлу с логом сна:");
-            Scanner scanner = new Scanner(System.in);
-            if (!scanner.hasNextLine()) {
-                System.out.println("Путь к файлу не указан");
-                return;
-            }
-            filePath = scanner.nextLine().trim();
-        }
-        if (filePath.isBlank()) {
+        if (args.length == 0 || args[0].isBlank()) { // убрал scanner и путь берется из args[0]
             System.out.println("Путь к файлу не указан");
             return;
         }
 
-        List<SleepingSession> sessions = Files.readAllLines(Path.of(filePath)).stream()
+        List<SleepingSession> sessions = readSessions(args[0]);
+
+        analysisFunctions.stream()
+                .map(function -> function.apply(sessions))
+                .forEach(result -> System.out.println(result.getDescription() + ": " + result.getValue()));
+    }
+
+    static List<SleepingSession> readSessions(String filePath) throws IOException {
+        return Files.readAllLines(Path.of(filePath)).stream()
                 .filter(line -> !line.isBlank())
                 .map(line -> line.split(";", -1))
                 .map(fields -> {
@@ -51,9 +45,6 @@ public class SleepTrackerApp {
                     return new SleepingSession(fields[0], fields[1], fields[2]);
                 })
                 .toList();
-
-        analysisFunctions.stream()
-                .map(function -> function.apply(sessions))
-                .forEach(result -> System.out.println(result.getDescription() + ": " + result.getValue()));
+        //вынес в отдельный метод парсер
     }
 }

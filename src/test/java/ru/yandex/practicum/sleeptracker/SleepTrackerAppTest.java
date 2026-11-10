@@ -1,5 +1,5 @@
 package ru.yandex.practicum.sleeptracker;
-
+//вынес парсинг и хронотип в другие файлы тестов, дописал тесты на парсинг файлов и изменил var на реальные значения
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("01.10.26 00:00", "01.10.26 05:00", "GOOD")
         );
 
-        var result = new SessionCountFunction().apply(sessions);
+        SleepAnalysisResult<Integer> result = new SessionCountFunction().apply(sessions);
 
         assertEquals(5, result.getValue());
     } // проверка на то что функция считает все сессии сна
@@ -26,7 +26,7 @@ public class SleepTrackerAppTest {
     void shouldReturnZeroForEmptyList() {
         List<SleepingSession> sessions = List.of();
 
-        var result = new SessionCountFunction().apply(sessions);
+        SleepAnalysisResult<Integer> result = new SessionCountFunction().apply(sessions);
 
         assertEquals(0, result.getValue());
     } // проверка на то что функция считает все сессии сна и возвращает 0 если список пустой
@@ -39,7 +39,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("01.10.26 00:00", "01.10.26 10:00", "GOOD")
         );
 
-        var result = new MinSessionDurationFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new MinSessionDurationFunction().apply(sessions);
 
         assertEquals(360L, result.getValue());
     } // проверка на то что функция считает минимальную продолжительность сна
@@ -50,7 +50,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("01.10.26 00:00", "01.10.26 07:00", "GOOD")
         );
 
-        var result = new MinSessionDurationFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new MinSessionDurationFunction().apply(sessions);
 
         assertEquals(420L, result.getValue());
     } // проверка на то что функция считает минимальную продолжительность сна и работает с одним сеансом сна
@@ -63,7 +63,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("01.10.26 00:00", "01.10.26 10:00", "GOOD")
         );
 
-        var result = new MaxSessionDurationFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new MaxSessionDurationFunction().apply(sessions);
 
         assertEquals(600L, result.getValue());
     } // проверка на то что функция считает максимальную продолжительность сна
@@ -74,7 +74,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("01.10.26 00:00", "01.10.26 07:00", "GOOD")
         );
 
-        var result = new MaxSessionDurationFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new MaxSessionDurationFunction().apply(sessions);
 
         assertEquals(420L, result.getValue());
     } // проверка на то что функция считает максимальную продолжительность сна и работает с одним сеансом сна
@@ -87,7 +87,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("01.10.26 00:00", "01.10.26 07:30", "GOOD")
         );
 
-        var result = new AverageSessionDurationFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new AverageSessionDurationFunction().apply(sessions);
 
         assertEquals(450L, result.getValue());
     } // проверка на то что функция считает среднюю продолжительность сна
@@ -98,7 +98,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("01.10.26 00:00", "01.10.26 08:00", "GOOD")
         );
 
-        var result = new AverageSessionDurationFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new AverageSessionDurationFunction().apply(sessions);
 
         assertEquals(480L, result.getValue());
     } // проверка на то что функция считает среднюю продолжительность сна и работает с одним сеансом сна
@@ -110,7 +110,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("01.10.26 00:00", "01.10.26 06:41", "GOOD")
         );
 
-        var result = new AverageSessionDurationFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new AverageSessionDurationFunction().apply(sessions);
 
         assertEquals(400L, result.getValue());
     } // проверка на то что функция считает среднюю продолжительность сна и округляет до целого числа
@@ -124,7 +124,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("04.10.26 23:00", "05.10.26 07:00", "BAD")
         );
 
-        var result = new PoorSleepSessionCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new PoorSleepSessionCountFunction().apply(sessions);
 
         assertEquals(2L, result.getValue());
     } // проверка на то что функция считает количество плохих сессий сна
@@ -137,7 +137,7 @@ public class SleepTrackerAppTest {
                 new SleepingSession("03.10.26 23:00", "04.10.26 07:00", "GOOD")
         );
 
-        var result = new PoorSleepSessionCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new PoorSleepSessionCountFunction().apply(sessions);
 
         assertEquals(0L, result.getValue());
     } // проверка на то что функция считает количество плохих сессий сна и возвращает 0 если нет плохих сессий
@@ -149,7 +149,7 @@ public class SleepTrackerAppTest {
                 session("02.10.26 23:00", "03.10.26 07:00")
         );
 
-        var result = new SleeplessNightCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(sessions);
 
         assertEquals(0L, result.getValue());
     } // проверка на то что функция считает количество бессонных ночей и возвращает 0 если каждая ночь имеет сон
@@ -161,7 +161,7 @@ public class SleepTrackerAppTest {
                 session("03.10.26 23:00", "04.10.26 07:00")
         );
 
-        var result = new SleeplessNightCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(sessions);
 
         assertEquals(1L, result.getValue());
     } // проверка на то что функция считает количество бессонных ночей и возвращает 1 если есть одна бессонная ночь
@@ -173,7 +173,7 @@ public class SleepTrackerAppTest {
                 session("01.11.26 23:00", "02.11.26 07:00")
         );
 
-        var result = new SleeplessNightCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(sessions);
 
         assertEquals(1L, result.getValue());
     } // проверка на то что функция считает количество бессонных ночей и работает с переходом месяца
@@ -185,7 +185,7 @@ public class SleepTrackerAppTest {
                 session("02.10.26 07:00", "02.10.26 11:00")
         );
 
-        var result = new SleeplessNightCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(sessions);
 
         assertEquals(2L, result.getValue());
     } // проверка на то что функция считает количество бессонных ночей и считает сон после 6 утра как бессонную ночь
@@ -196,7 +196,7 @@ public class SleepTrackerAppTest {
                 session("01.10.26 23:00", "02.10.26 03:00")
         );
 
-        var result = new SleeplessNightCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(sessions);
 
         assertEquals(0L, result.getValue());
     } // проверка на то что функция считает количество бессонных ночей
@@ -208,7 +208,7 @@ public class SleepTrackerAppTest {
                 session("02.10.26 02:00", "02.10.26 07:00")
         );
 
-        var result = new SleeplessNightCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(sessions);
 
         assertEquals(0L, result.getValue());
     } // проверка на то что функция считает количество бессонных ночей и считает сон
@@ -220,7 +220,7 @@ public class SleepTrackerAppTest {
                 session("02.10.26 00:00", "02.10.26 06:00")
         );
 
-        var result = new SleeplessNightCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(sessions);
 
         assertEquals(0L, result.getValue());
     } // проверка на то что функция считает количество бессонных ночей и
@@ -232,7 +232,7 @@ public class SleepTrackerAppTest {
                 session("02.10.26 06:00", "02.10.26 11:00")
         );
 
-        var result = new SleeplessNightCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(sessions);
 
         assertEquals(1L, result.getValue());
     } // проверка на то что функция считает количество бессонных ночей и
@@ -244,72 +244,40 @@ public class SleepTrackerAppTest {
                 session("01.10.26 23:00", "02.10.26 00:00")
         );
 
-        var result = new SleeplessNightCountFunction().apply(sessions);
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(sessions);
 
         assertEquals(1L, result.getValue());
     } // проверка на то что функция считает количество бессонных ночей и
 
     @Test
-    void shouldIdentifyOwl() {
-        List<SleepingSession> sessions = List.of(
-                session("01.10.26 23:30", "02.10.26 09:30")
-        );
+    void shouldReturnZeroForEmptyMinimum() {
+        SleepAnalysisResult<Long> result = new MinSessionDurationFunction().apply(List.of());
 
-        var result = new ChronotypeFunction().apply(sessions);
-
-        assertEquals(Chronotype.OWL, result.getValue());
-    } // проверка на то что функция определяет хронотип совы
+        assertEquals(0L, result.getValue());
+    }
 
     @Test
-    void shouldIdentifyLark() {
-        List<SleepingSession> sessions = List.of(
-                session("01.10.26 21:30", "02.10.26 06:30")
-        );
+    void shouldReturnZeroForEmptyMaximum() {
+        SleepAnalysisResult<Long> result = new MaxSessionDurationFunction().apply(List.of());
 
-        var result = new ChronotypeFunction().apply(sessions);
-
-        assertEquals(Chronotype.LARK, result.getValue());
-    } // проверка на то что функция определяет хронотип жаворонка
+        assertEquals(0L, result.getValue());
+    }
 
     @Test
-    void shouldIdentifyPigeon() {
-        List<SleepingSession> sessions = List.of(
-                session("01.10.26 22:30", "02.10.26 08:00")
-        );
+    void shouldReturnZeroForEmptyAverage() {
+        SleepAnalysisResult<Long> result = new AverageSessionDurationFunction().apply(List.of());
 
-        var result = new ChronotypeFunction().apply(sessions);
-
-        assertEquals(Chronotype.PIGEON, result.getValue());
-    } // проверка на то что функция определяет хронотип голубя
+        assertEquals(0L, result.getValue());
+    }
 
     @Test
-    void shouldReturnPigeonOnTie() {
-        List<SleepingSession> sessions = List.of(
-                session("01.10.26 23:30", "02.10.26 09:30"),
-                session("02.10.26 21:30", "03.10.26 06:30")
-        );
+    void shouldReturnZeroForEmptySleeplessNights() {
+        SleepAnalysisResult<Long> result = new SleeplessNightCountFunction().apply(List.of());
 
-        var result = new ChronotypeFunction().apply(sessions);
-
-        assertEquals(Chronotype.PIGEON, result.getValue());
-    } // проверка на то что функция определяет хронотип голубя при равенстве количества ночей совы и жаворонка
-
-    @Test
-    void shouldIgnoreDaytimeSessions() {
-        List<SleepingSession> sessions = List.of(
-                session("01.10.26 23:30", "02.10.26 09:30"),
-                session("02.10.26 12:00", "02.10.26 13:00"),
-                session("02.10.26 14:00", "02.10.26 15:00"),
-                session("02.10.26 23:30", "03.10.26 09:30"),
-                session("03.10.26 12:00", "03.10.26 13:00")
-        );
-
-        var result = new ChronotypeFunction().apply(sessions);
-
-        assertEquals(Chronotype.OWL, result.getValue());
-    } // проверка на то что функция определяет хронотип совы и игнорирует дневные сессии сна
+        assertEquals(0L, result.getValue());
+    }
 
     private SleepingSession session(String start, String end) {
         return new SleepingSession(start, end, "GOOD");
     }
-} // для тестов я сделал отдельный класс SleepTrackerAppTest.java и написал тесты на все функции, которые были в проекте
+}
