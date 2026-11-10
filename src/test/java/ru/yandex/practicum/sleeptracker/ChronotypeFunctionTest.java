@@ -174,6 +174,7 @@ public class ChronotypeFunctionTest {
 
         assertEquals(Chronotype.OWL, result.getValue());
     }
+
     //крч добавил тесты на границы и отсутствие ночного сна
     private SleepingSession session(String start, String end) {
         return new SleepingSession(start, end, "GOOD");
