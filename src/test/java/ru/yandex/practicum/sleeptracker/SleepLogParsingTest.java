@@ -103,6 +103,7 @@ public class SleepLogParsingTest {
 
         assertThrows(NoSuchFileException.class, () -> SleepTrackerApp.readSessions(file.toString()));
     }
+
     //тесты на парсинг файлов
     private Path writeLog(String content) throws IOException {
         return Files.writeString(tempDir.resolve("sleep_log.txt"), content);
